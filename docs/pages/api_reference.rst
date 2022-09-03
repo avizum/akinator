@@ -1,4 +1,4 @@
-.. py:currentmodule:: asyncakinator
+.. py:currentmodule:: akinator
 
 
 API Reference
