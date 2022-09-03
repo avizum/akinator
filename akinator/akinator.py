@@ -97,7 +97,9 @@ class Akinator:
     Attributes
     ----------
 
-    .. note::
+    .. admonition::
+        :class: note
+
         These attributes will be missing before a game has started.
         Use :func:`Akinator.start` a game before accessing these attributes.
 
@@ -108,7 +110,9 @@ class Akinator:
     step: :class:`int`
         The question you are on, starting from 0.
 
-    .. note::
+    .. admonition::
+        :class: note
+
         These attributes will be missing until :func:`Akinator.start` has been called.
 
     first_guess: :class:`Guess`
@@ -373,8 +377,8 @@ class Akinator:
         :attr:`Akinator.guesses`
             A list of guesses from greatest to lowest probablity
 
-        .. note::
-
+        .. admonition::
+            :class: note
             It is recommended that you call this function when `Akinator.progression` is above 85.0,
             because by then, Akinator will most likely narrowed the guesses down to one.
         """
@@ -397,7 +401,8 @@ class Akinator:
         """
         Closes the aiohttp ClientSession.
 
-        .. note::
+        .. admonition::
+            :class: note
 
             If you specified your own ClientSession, this may interrupt what you are doing with the session.
         """
