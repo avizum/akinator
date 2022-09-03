@@ -95,9 +95,9 @@ class Akinator:
     child_mode: :class:`bool`
         Whether to use child mode or not. Defaults to False.
 
+
     Attributes
     ----------
-
     .. admonition:: Note
         :class: note
 
@@ -110,12 +110,6 @@ class Akinator:
         How far in the game you are.
     step: :class:`int`
         The question you are on, starting from 0.
-
-    .. admonition:: Note
-        :class: note
-
-        These attributes will be missing until :func:`Akinator.start` has been called.
-
     first_guess: :class:`Guess`
         A dictionary containing the first guess information.
     guesses: list[:class:`Guess`]
