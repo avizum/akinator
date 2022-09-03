@@ -66,30 +66,31 @@ class Akinator:
     ----------
     language: :class:`str`
         The language to use when starting the game. "en" if not provided, or you can use the following:
-        - "en": English (default)
-        - "en_animals": English server for guessing animals
-        - "en_objects": English server for guessing objects
-        - "ar": Arabic
-        - "cn": Chinese
-        - "de": German
-        - "de_animals": German server for guessing animals
-        - "es": Spanish
-        - "es_animals": Spanish server for guessing animals
-        - "fr": French
-        - "fr_animals": French server for guessing animals
-        - "fr_objects": French server for guessing objects
-        - "il": Hebrew
-        - "it": Italian
-        - "it_animals": Italian server for guessing animals
-        - "jp": Japanese
-        - "jp_animals": Japanese server for guessing animals
-        - "kr": Korean
-        - "nl": Dutch
-        - "pl": Polish
-        - "pt": Portuguese
-        - "ru": Russian
-        - "tr": Turkish
-        - "id": Indonesian
+
+        - ``en``: English (default)
+        - ``en_animals``: English server for guessing animals
+        - ``en_objects``: English server for guessing objects
+        - ``ar``: Arabic
+        - ``cn``: Chinese
+        - ``de``: German
+        - ``de_animals``: German server for guessing animals
+        - ``es``: Spanish
+        - ``es_animals``: Spanish server for guessing animals
+        - ``fr``: French
+        - ``fr_animals``: French server for guessing animals
+        - ``fr_objects``: French server for guessing objects
+        - ``il``: Hebrew
+        - ``it``: Italian
+        - ``it_animals``: Italian server for guessing animals
+        - ``jp``: Japanese
+        - ``jp_animals``: Japanese server for guessing animals
+        - ``kr``: Korean
+        - ``nl``: Dutch
+        - ``pl``: Polish
+        - ``pt``: Portuguese
+        - ``ru``: Russian
+        - ``tr``: Turkish
+        - ``id``: Indonesian
 
     child_mode: :class:`bool`
         Whether to use child mode or not. Defaults to False.
@@ -97,7 +98,7 @@ class Akinator:
     Attributes
     ----------
 
-    .. admonition::
+    .. admonition:: Note
         :class: note
 
         These attributes will be missing before a game has started.
@@ -110,7 +111,7 @@ class Akinator:
     step: :class:`int`
         The question you are on, starting from 0.
 
-    .. admonition::
+    .. admonition:: Note
         :class: note
 
         These attributes will be missing until :func:`Akinator.start` has been called.
@@ -401,8 +402,8 @@ class Akinator:
         """
         Closes the aiohttp ClientSession.
 
-        .. admonition::
-            :class: note
+    .. admonition:: Note
+        :class: note
 
             If you specified your own ClientSession, this may interrupt what you are doing with the session.
         """
