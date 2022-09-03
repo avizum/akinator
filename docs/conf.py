@@ -22,6 +22,7 @@ extensions: list[str] = [
     "sphinx.ext.napoleon",
     "sphinx.ext.intersphinx",
     "sphinx.ext.extlinks",
+    "sphinxcontrib_trio",
     "resource_links",
     "sphinx_copybutton",
     "sphinx_inline_tabs"
