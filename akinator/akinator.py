@@ -62,6 +62,11 @@ class Akinator:
     """
     A class that represents an async Akinator game.
 
+    .. note::
+
+        Some attributes will be missing before a game has started.
+        Use :func:`Akinator.start` a game before accessing these attributes.
+
     Parameters
     ----------
     language: :class:`str`
@@ -97,12 +102,6 @@ class Akinator:
 
     Attributes
     ----------
-
-.. note::
-
-    These attributes will be missing before a game has started.
-    Use :func:`Akinator.start` a game before accessing these attributes.
-
     question: :class:`str`
         The question that Akinator is asking.
     progression: :class:`float`
