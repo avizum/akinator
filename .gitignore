@@ -1,3 +1,4 @@
 .DS_STORE
-.egg-info
+*.egg-info
 build/*
+dist/*
