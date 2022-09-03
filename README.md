@@ -1,2 +1,0 @@
-# akinator
-Akinator package
