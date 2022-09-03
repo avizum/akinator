@@ -6,7 +6,7 @@ API Reference
 
 Akinator
 --------
-.. autoclass:: Pool
+.. autoclass:: Akinator
     :members:
 
 Exceptions
