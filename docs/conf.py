@@ -23,7 +23,6 @@ extensions: list[str] = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.extlinks",
     "sphinxcontrib_trio",
-    "resource_links",
     "sphinx_copybutton",
     "sphinx_inline_tabs"
 ]
@@ -76,6 +75,3 @@ intersphinx_mapping: dict[str, tuple[str, None]] = {
 extlinks: dict[str, tuple[str, str]] = {
 }
 extlinks_detect_hardcoded_links: bool = True
-
-resource_links: dict[str, str] = {
-}
