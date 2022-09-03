@@ -95,13 +95,13 @@ class Akinator:
     child_mode: :class:`bool`
         Whether to use child mode or not. Defaults to False.
 
-
     Attributes
     ----------
-    .. note::
 
-        These attributes will be missing before a game has started.
-        Use :func:`Akinator.start` a game before accessing these attributes.
+.. note::
+
+    These attributes will be missing before a game has started.
+    Use :func:`Akinator.start` a game before accessing these attributes.
 
     question: :class:`str`
         The question that Akinator is asking.
