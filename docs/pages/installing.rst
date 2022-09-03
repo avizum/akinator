@@ -7,13 +7,10 @@ asyncakinator requires Python 3.9+. You can download the latest version of pytho
 
 * `aiohttp <https://pypi.org/project/aiohttp/>`_
 
-.. admonition:: Note
-    :class: note
-
+.. note::
     You don't have to install the packages manually as they will be installed automatically with pip. Just ensure you have python setup and pip added to path.
-.. admonition:: Caution
-    :class: caution
 
+.. caution::
     Make sure you have Installed & Setup git before proceeding. You can install it `here <https://git-scm.com/>`__
 
 Installing Stable Version

@@ -64,8 +64,8 @@ autodoc_type_aliases: dict[str, str] = {
 }
 autodoc_typehints_format: str = "short"
 
-napoleon_use_admonition_for_examples: bool = True
-napoleon_use_admonition_for_notes: bool = True
+# napoleon_use_admonition_for_examples: bool = True
+# napoleon_use_admonition_for_notes: bool = True
 
 intersphinx_mapping: dict[str, tuple[str, None]] = {
     "aiohttp": ("https://docs.aiohttp.org/en/stable/", None),

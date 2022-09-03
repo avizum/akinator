@@ -98,8 +98,7 @@ class Akinator:
 
     Attributes
     ----------
-    .. admonition:: Note
-        :class: note
+    .. note::
 
         These attributes will be missing before a game has started.
         Use :func:`Akinator.start` a game before accessing these attributes.
@@ -367,13 +366,13 @@ class Akinator:
         Get Akinator's current guesses based on the responses to the questions thus far.
 
         This function will set:
+
         :attr:`Akinator.first_guess`
             The first guess that is returned
         :attr:`Akinator.guesses`
             A list of guesses from greatest to lowest probablity
 
-        .. admonition:: Note
-            :class: note
+        .. note::
 
             It is recommended that you call this function when `Akinator.progression` is above 85.0,
             because by then, Akinator will most likely narrowed the guesses down to one.
@@ -397,8 +396,7 @@ class Akinator:
         """
         Closes the aiohttp ClientSession.
 
-        .. admonition:: Caution
-            :class: caution
+        .. caution::
 
             If you specified your own ClientSession, this may interrupt what you are doing with the session.
         """
