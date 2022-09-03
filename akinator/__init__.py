@@ -30,8 +30,6 @@ import pathlib
 import os
 
 from .akinator import Akinator
-from .async_akinator import AsyncAkinator
 from .exceptions import *
 
-
-__version__ = pathlib.Path(os.path.join(os.path.dirname(__file__), "VERSION.txt")).read_text()
+__version__ = "1.0.1"

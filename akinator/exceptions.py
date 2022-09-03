@@ -35,32 +35,32 @@ class InvalidLanguageError(ValueError):
     pass
 
 
-class AkiConnectionFailure(Exception):
+class AkinatorConnectionFailure(Exception):
     """Raised if the Akinator API fails to connect for some reason. Base class for AkiTimedOut, AkiNoQuestions, AkiServerDown, and AkiTechnicalError"""
 
     pass
 
 
-class AkiTimedOut(AkiConnectionFailure):
+class AkinatorTimedOut(AkinatorConnectionFailure):
     """Raised if the Akinator session times out. Derived from AkiConnectionFailure"""
 
     pass
 
 
-class AkiNoQuestions(AkiConnectionFailure):
+class AkinatorNoQuestions(AkinatorConnectionFailure):
     """Raised if the Akinator API runs out of questions to ask. This will happen if "Akinator.step" is at 79 and the "answer" function is called again. Derived from AkiConnectionFailure"""
 
     pass
 
 
-class AkiServerDown(AkiConnectionFailure):
+class AkinatorServerDown(AkinatorConnectionFailure):
     """Raised if Akinator's servers are down for the region you're running on. If this happens, try again later or use a different language. Derived from AkiConnectionFailure"""
 
     pass
 
 
-class AkiTechnicalError(AkiConnectionFailure):
-    """Raised if Aki's servers had a technical error. If this happens, try again later or use a different language. Derived from AkiConnectionFailure"""
+class AkinatorTechnicalError(AkinatorConnectionFailure):
+    """Raised if Akinator's servers had a technical error. If this happens, try again later or use a different language. Derived from AkiConnectionFailure"""
 
     pass
 

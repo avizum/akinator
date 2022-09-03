@@ -30,11 +30,11 @@ from typing import Any, TypedDict
 from .exceptions import (
     InvalidAnswerError,
     InvalidLanguageError,
-    AkiConnectionFailure,
-    AkiTimedOut,
-    AkiNoQuestions,
-    AkiServerDown,
-    AkiTechnicalError,
+    AkinatorConnectionFailure,
+    AkinatorTimedOut,
+    AkinatorNoQuestions,
+    AkinatorServerDown,
+    AkinatorTechnicalError,
 )
 
 
@@ -171,16 +171,15 @@ def get_lang_and_theme(lang=None):
 
 def raise_connection_error(response):
     """Raise the proper error if the API failed to connect"""
-
     if response == "KO - SERVER DOWN":
-        raise AkiServerDown("Akinator's servers are down in this region. Try again later or use a different language")
+        raise AkinatorServerDown("Akinator's servers are down in this region. Try again later or use a different language")
+
     elif response == "KO - TECHNICAL ERROR":
-        raise AkiTechnicalError(
-            "Akinator's servers have had a technical error. Try again later or use a different language"
-        )
+        raise AkinatorTechnicalError("Akinator's servers have had a technical error. Try again later or use a different language")
+
     elif response == "KO - TIMEOUT":
-        raise AkiTimedOut("Your Akinator session has timed out")
-    elif response == "KO - ELEM LIST IS EMPTY" or response == "WARN - NO QUESTION":
-        raise AkiNoQuestions('"Akinator.step" reached 79. No more questions')
+        raise AkinatorTimedOut("Your Akinator session has timed out")
+    elif response in ["KO - ELEM LIST IS EMPTY", "WARN - NO QUESTION"]:
+        raise AkinatorNoQuestions('"Akinator.step" reached 79. No more questions')
     else:
-        raise AkiConnectionFailure("An unknown error has occured. Server response: {}".format(response))
+        raise AkinatorConnectionFailure(f"An unknown error has occured. Server response: {response}")

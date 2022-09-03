@@ -23,12 +23,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
+from __future__ import annotations
+
 import json
 import re
 import time
 from typing import Any
 
-import requests
+import aiohttp
 
 from .exceptions import CantGoBackAnyFurther
 from .utils import (
@@ -39,7 +41,6 @@ from .utils import (
     get_lang_and_theme,
     raise_connection_error
 )
-
 
 # * URLs for the API requests
 NEW_SESSION_URL = "https://{}/new_session?callback=jQuery331023608747682107778_{}&urlApiWs={}&partner=1&childMod={}&player=website-desktop&uid_ext_session={}&frontaddr={}&constraint=ETAT<>'AV'&soft_constraint={}&question_filter={}"
@@ -59,7 +60,7 @@ HEADERS = {
 
 class Akinator:
     """
-    A class that represents an Akinator game.
+    A class that represents an async Akinator game.
 
     Parameters
     ----------
@@ -92,15 +93,13 @@ class Akinator:
 
     child_mode: :class:`bool`
         Whether to use child mode or not. Defaults to False.
-    session: :class:`aiohttp.ClientSession`
-        An aiohttp session to use for the requests. If not provided, a new session will be created.
 
     Attributes
     ----------
 
     .. note::
         These attributes will be missing before a game has started.
-        Use :func:`AsyncAkinator.start` a game before accessing these attributes.
+        Use :func:`Akinator.start` a game before accessing these attributes.
 
     question: :class:`str`
         The question that Akinator is asking.
@@ -110,24 +109,38 @@ class Akinator:
         The question you are on, starting from 0.
 
     .. note::
-        These attributes will be missing until :func:`AsyncAkinator.start` has been called.
+        These attributes will be missing until :func:`Akinator.start` has been called.
 
     first_guess: :class:`Guess`
         A dictionary containing the first guess information.
     guesses: list[:class:`Guess`]
         A list of :class:`Guess` dictionary of guesses from greatest to least probability.
+
+    Raises
+    ------
+    :exc:`TypeError`
+        The session is not an class`aiohttp.ClientSession`.
     """
 
-    def __init__(self, language: str = "en", child_mode: bool = False):
+    def __init__(
+        self,
+        language: str = "en",
+        child_mode: bool = False,
+        session: aiohttp.ClientSession | None = None,
+    ) -> None:
+        if session is not None and not isinstance(session, aiohttp.ClientSession):
+            raise TypeError("session must be a aiohttp.ClientSession")
+
         self.language: str = language
         self.child_mode: bool = child_mode
+        self._session: aiohttp.ClientSession = MISSING
 
         self.question: str = MISSING
         self.progression: float = 0.0
         self.step: int = 0
 
-        self.first_guess = None
-        self.guesses = None
+        self.first_guess: Guess = MISSING
+        self.guesses: list[Guess] = MISSING
 
         self.uri: str = MISSING
         self.server: str = MISSING
@@ -137,6 +150,9 @@ class Akinator:
         self.question_filter: str = MISSING
         self.timestamp: float = 0.0
         self.session: int = 0
+
+    async def _create_session(self) -> None:
+        self._session = aiohttp.ClientSession()
 
     def _update(self, resp: Any, start: bool = False) -> None:
         """Update class variables"""
@@ -157,49 +173,48 @@ class Akinator:
 
         return json.loads(",".join(response.split("(")[1::])[:-1])
 
-    def _get_session_info(self) -> None:
+    async def _get_session_info(self) -> None:
         """Get uid and frontaddr from akinator.com/game"""
 
         info_regex = re.compile("var uid_ext_session = '(.*)'\\;\\n.*var frontaddr = '(.*)'\\;")
-        r = requests.get("https://en.akinator.com/game")
 
-        match = info_regex.search(r.text)
-        if not match:
-            return
+        async with self._session.get("https://en.akinator.com/game") as w:
+            match = info_regex.search(await w.text())
+            if not match:
+                return
+
         self.uid, self.frontaddr = match.groups()[0], match.groups()[1]
 
-    def _auto_get_region(self, lang: str, theme: str) -> dict[str, str]:
+    async def _auto_get_region(self, lang: str, theme: str) -> dict[str, str]:
         """Automatically get the uri and server from akinator.com for the specified language and theme"""
 
         server_regex = re.compile(
             '[{"translated_theme_name":"[\s\S]*","urlWs":"https:\\\/\\\/srv[0-9]+\.akinator\.com:[0-9]+\\\/ws","subject_id":"[0-9]+"}]'
         )
-        uri = f"{lang}.akinator.com"
 
+        uri = f"{lang}.akinator.com"
         bad_list = ["https://srv12.akinator.com:9398/ws"]
         while True:
-            r = requests.get("https://" + uri)
-
-            match = server_regex.search(r.text)
-            if match is None:
-                return {"url": MISSING, "server": MISSING}
+            async with self._session.get(f"https://{uri}") as w:
+                match = server_regex.search(await w.text())
+                if match is None:
+                    return {"url": MISSING, "server": MISSING}
             parsed = json.loads(match.group().split("'arrUrlThemesToPlay', ")[-1])
             server = MISSING
-            if theme == "c":
-                server = next((i for i in parsed if i["subject_id"] == "1"), MISSING)["urlWs"]
-            elif theme == "a":
+            if theme == "a":
                 server = next((i for i in parsed if i["subject_id"] == "14"), MISSING)["urlWs"]
+            elif theme == "c":
+                server = next((i for i in parsed if i["subject_id"] == "1"), MISSING)["urlWs"]
             elif theme == "o":
                 server = next((i for i in parsed if i["subject_id"] == "2"), MISSING)["urlWs"]
-
             if server not in bad_list:
                 return {"uri": uri, "server": server}
 
-    def start(
+    async def start(
         self,
         language: str | None = None,
-        child_mode: bool | None = False
-    ):
+        child_mode: bool | None = None,
+    ) -> str:
         """
         Starts a new game. This should be called before any other method.
 
@@ -211,30 +226,37 @@ class Akinator:
         child_mode: :class:`bool`
             Whether or not to use child mode. If True, the game will be more "child-friendly".
 
+        Raises
+        ------
+        :exc:`TypeError`
+            The `session` parameter was not a :class:`aiohttp.ClientSession`.
+
         Returns
         -------
         :class:`str`
             The first question that Akinator is asking.
         """
+        if self._session is MISSING:
+            await self._create_session()
+
         if language is not None:
             self.language = language
         if child_mode is not None:
             self.child_mode = child_mode
 
         self.timestamp = time.time()
-        region_info = self._auto_get_region(
+
+        region_info = await self._auto_get_region(
             get_lang_and_theme(self.language)["lang"],
             get_lang_and_theme(self.language)["theme"]
         )
         self.uri, self.server = region_info["uri"], region_info["server"]
 
-
         soft_constraint = "ETAT%3D%27EN%27" if self.child_mode else ""
         self.question_filter = "cat%3D1" if self.child_mode else ""
+        await self._get_session_info()
 
-        self._get_session_info()
-
-        r = requests.get(
+        async with self._session.get(
             NEW_SESSION_URL.format(
                 self.uri,
                 self.timestamp,
@@ -246,8 +268,8 @@ class Akinator:
                 self.question_filter,
             ),
             headers=HEADERS,
-        )
-        resp = self._parse_response(r.text)
+        ) as w:
+            resp = self._parse_response(await w.text())
 
         if resp["completion"] == "OK":
             self._update(resp, True)
@@ -255,9 +277,9 @@ class Akinator:
         else:
             return raise_connection_error(resp["completion"])
 
-    def answer(self, answer: str) -> str:
+    async def answer(self, answer: str) -> str:
         """
-        Answers the current question accessed with :attr:`AsyncAkinator.question`, and returns the next question.
+        Answers the current question accessed with :attr:`Akinator.question`, and returns the next question.
 
         Parameter
         ---------
@@ -281,7 +303,7 @@ class Akinator:
         """
         ans = answer_to_id(answer)
 
-        r = requests.get(
+        async with self._session.get(
             ANSWER_URL.format(
                 self.uri,
                 self.timestamp,
@@ -295,8 +317,8 @@ class Akinator:
                 self.question_filter,
             ),
             headers=HEADERS,
-        )
-        resp = self._parse_response(r.text)
+        ) as w:
+            resp = self._parse_response(await w.text())
 
         if resp["completion"] == "OK":
             self._update(resp)
@@ -304,7 +326,7 @@ class Akinator:
         else:
             return raise_connection_error(resp["completion"])
 
-    def back(self) -> str:
+    async def back(self) -> str:
         """
         Go back to the previous question.
 
@@ -321,7 +343,7 @@ class Akinator:
         if self.step == 0:
             raise CantGoBackAnyFurther("You were on the first question and couldn't go back any further")
 
-        r = requests.get(
+        async with self._session.get(
             BACK_URL.format(
                 self.server,
                 self.timestamp,
@@ -332,8 +354,8 @@ class Akinator:
                 self.question_filter,
             ),
             headers=HEADERS,
-        )
-        resp = self._parse_response(r.text)
+        ) as w:
+            resp = self._parse_response(await w.text())
 
         if resp["completion"] == "OK":
             self._update(resp)
@@ -341,7 +363,7 @@ class Akinator:
         else:
             return raise_connection_error(resp["completion"])
 
-    def win(self) -> Guess:
+    async def win(self) -> Guess:
         """
         Get Akinator's current guesses based on the responses to the questions thus far.
 
@@ -356,13 +378,13 @@ class Akinator:
             It is recommended that you call this function when `Akinator.progression` is above 85.0,
             because by then, Akinator will most likely narrowed the guesses down to one.
         """
-        r = requests.get(
+        async with self._session.get(
             WIN_URL.format(
                 self.server, self.timestamp, str(self.child_mode).lower(), self.session, self.signature, self.step
             ),
             headers=HEADERS,
-        )
-        resp = self._parse_response(r.text)
+        ) as w:
+            resp = self._parse_response(await w.text())
 
         if resp["completion"] == "OK":
             self.first_guess = format_guess(resp["parameters"]["elements"][0]["element"])
@@ -370,3 +392,16 @@ class Akinator:
             return self.first_guess
         else:
             return raise_connection_error(resp["completion"])
+
+    async def close(self) -> None:
+        """
+        Closes the aiohttp ClientSession.
+
+        .. note::
+
+            If you specified your own ClientSession, this may interrupt what you are doing with the session.
+        """
+        if self._session is not None and self._session.closed is False:
+            await self._session.close()
+
+        self._session = MISSING
