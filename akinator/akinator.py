@@ -401,7 +401,7 @@ class Akinator:
 
             If you specified your own ClientSession, this may interrupt what you are doing with the session.
         """
-        if self._session is not None and self._session.closed is False:
+        if self._session is not MISSING and self._session.closed is False:
             await self._session.close()
 
         self._session = MISSING

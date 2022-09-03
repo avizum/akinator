@@ -36,36 +36,36 @@ class InvalidLanguageError(ValueError):
 
 
 class AkinatorConnectionFailure(Exception):
-    """Raised if the Akinator API fails to connect for some reason. Base class for AkiTimedOut, AkiNoQuestions, AkiServerDown, and AkiTechnicalError"""
+    """Raised if the Akinator API fails to connect for some reason."""
 
     pass
 
 
 class AkinatorTimedOut(AkinatorConnectionFailure):
-    """Raised if the Akinator session times out. Derived from AkiConnectionFailure"""
+    """Raised if the Akinator session times out"""
 
     pass
 
 
 class AkinatorNoQuestions(AkinatorConnectionFailure):
-    """Raised if the Akinator API runs out of questions to ask. This will happen if "Akinator.step" is at 79 and the "answer" function is called again. Derived from AkiConnectionFailure"""
+    """Raised if the Akinator API runs out of questions to ask. This will happen if "Akinator.step" is at 79"""
 
     pass
 
 
 class AkinatorServerDown(AkinatorConnectionFailure):
-    """Raised if Akinator's servers are down for the region you're running on. If this happens, try again later or use a different language. Derived from AkiConnectionFailure"""
+    """Raised if Akinator's servers are down for the region you're running on."""
 
     pass
 
 
 class AkinatorTechnicalError(AkinatorConnectionFailure):
-    """Raised if Akinator's servers had a technical error. If this happens, try again later or use a different language. Derived from AkiConnectionFailure"""
+    """Raised if Akinator's servers had a technical error."""
 
     pass
 
 
 class CantGoBackAnyFurther(Exception):
-    """Raised when the user is on the first question and tries to go back further"""
+    """Raised when the user is on the first question and tries to go back further."""
 
     pass
