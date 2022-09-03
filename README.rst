@@ -10,6 +10,7 @@ akinator
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 Copyright © 2019 NinjaSnail1080
+
 Copyright © 2022 avizum
 
 Licensed under the MIT License (see ``LICENSE.txt`` for details).
@@ -22,17 +23,9 @@ Licensed under the MIT License (see ``LICENSE.txt`` for details).
 Installing
 **********
 
-To install the regular library without async support, just run the following command::
+To install, just run the following command::
 
-  python3 -m pip install -U akinator.py
-
-Otherwise, to get asynchronous support, do::
-
-  python3 -m pip install -U akinator.py[async]
-
-To get async support plus faster performance (via the ``aiodns`` and ``cchardet`` libraries), do::
-
-  python3 -m pip install -U akinator.py[fast_async]
+  python3 -m pip install -U akinator
 
 Requirements
 ============
@@ -41,9 +34,8 @@ Requirements
 
 - ``requests``
 
-- ``aiohttp`` (Optional, for async)
+- ``aiohttp``
 
-- ``aiodns`` and ``cchardet`` (Optional, for faster performance with async)
 
 Usually, ``pip`` will handle these for you.
 
@@ -310,12 +302,3 @@ CantGoBackAnyFurther:
   Raised when the user is on the first question and tries to go back further by calling ``Akinator.back()``
 
 """""""""""""""""
-
-.. image:: https://img.shields.io/badge/Enjoy%20this%20library%3F-Say%20Thanks!-brightgreen.svg
-    :target: https://saythanks.io/to/innuganti.ashwin%40gmail.com
-
-.. image:: https://img.shields.io/badge/Having%20problems%3F-Issues%20Tracker-blueviolet.svg
-    :target: https://github.com/NinjaSnail1080/akinator.py/issues
-
-.. image:: https://img.shields.io/badge/License-MIT-red.svg
-    :target: https://opensource.org/licenses/MIT
