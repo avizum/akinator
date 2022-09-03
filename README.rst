@@ -65,4 +65,4 @@ Here's a quick little example of the library being used to make a simple, text-b
 
 Documentation
 -------------
-Documention can be found `here. <https://asyncakinator.readthedocs.io/en/latest/index.html/>`_
+Documention can be found `here. <https://asyncakinator.readthedocs.io/en/latest/>`_

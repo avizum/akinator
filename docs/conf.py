@@ -9,7 +9,7 @@ from typing import Any
 project: str = "asyncakinator"
 copyright: str = "2022, avizum"
 author: str = "avizum"
-release: int = "1.0.4"
+release: int = "1.1"
 
 
 # -- General Configuration --
