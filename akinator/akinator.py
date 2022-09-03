@@ -378,8 +378,9 @@ class Akinator:
         :attr:`Akinator.guesses`
             A list of guesses from greatest to lowest probablity
 
-        .. admonition::
+        .. admonition:: Note
             :class: note
+
             It is recommended that you call this function when `Akinator.progression` is above 85.0,
             because by then, Akinator will most likely narrowed the guesses down to one.
         """
@@ -402,8 +403,8 @@ class Akinator:
         """
         Closes the aiohttp ClientSession.
 
-    .. admonition:: Note
-        :class: note
+        .. admonition:: Caution
+            :class: caution
 
             If you specified your own ClientSession, this may interrupt what you are doing with the session.
         """
