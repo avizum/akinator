@@ -1,13 +1,11 @@
-[project]
-name="asyncakinator"
-version="1.0.3"
-authors=[
-    {name="avizum", email="juliusrt@outlook.com"}
-]
-description="An async API wrapper for Akinator, written in Python."
-readme="README.rst"
-license="MIT"
-requires-python=">=3.9"
+[tool.poetry]
+name = "akinator"
+version = "1.0.3"
+description = "An async API wrapper for Akinator, written in Python."
+authors = ["avizum <juliusrt@outlook.com>"]
+license = "MIT"
+readme = "README.rst"
+
 classifiers=[
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
@@ -21,14 +19,14 @@ classifiers=[
     "Topic :: Internet",
     "Topic :: Utilities"
 ]
-dependencies=[
-    "aiohttp"
-]
 
-[project.urls]
-"Homepage"="https://github.com/avizum/akinator"
-"Bug Tracker"="https://github.com/avizum/akinator/issues"
-"Documentation"="https://github.com/avizum/akinator/blob/master/README.rst"
+repository="https://github.com/avizum/akinator"
+homepage="https://github.com/avizum/akinator"
+documentation="https://github.com/avizum/akinator/blob/master/README.rst"
+
+[tool.poetry.dependencies]
+python = ">=3.9"
+aiohttp = "^3.8.1"
 
 [tool.poetry.group.docs]
 optional = true
