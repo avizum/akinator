@@ -22,7 +22,7 @@ Models
 
 .. autoclass:: Guess
     :members:
-    :exclude-members:
+    :exclude-members: id, name, probability, description, ranking, absolute_picture_path
 
 Utils
 -----
@@ -37,42 +37,32 @@ A sentinel value that is used to indicate a missing value with distinction from 
 Exceptions
 ----------
 
-InvalidAnswerError
-~~~~~~~~~~~~~~~~~~
-.. autoclass:: InvalidAnswerError
+.. autoclass:: InputError
     :members:
 
-InvalidLanguageError
-~~~~~~~~~~~~~~~~~~~~
-.. autoclass:: InvalidLanguageError
+.. autoclass:: InvalidAnswer
     :members:
 
-AkinatorConnectionFailure
-~~~~~~~~~~~~~~~~~~~~~~~~~
-.. autoclass:: AkinatorConnectionFailure
+.. autoclass:: InvalidLanguage
     :members:
 
-AkinatorTimeout
-~~~~~~~~~~~~~~~
-.. autoclass:: AkinatorTimeout
+.. autoclass:: InvalidTheme
     :members:
 
-AkinatorNoQuestions
-~~~~~~~~~~~~~~~~~~~
-.. autoclass:: AkinatorNoQuestions
+.. autoclass:: ConnectionFailure
     :members:
 
-AkinatorServerDown
-~~~~~~~~~~~~~~~~~~
-.. autoclass:: AkinatorServerDown
+.. autoclass:: TimedOut
     :members:
 
-AkinatorTechnicalError
-~~~~~~~~~~~~~~~~~~~~~~
-.. autoclass:: AkinatorTechnicalError
+.. autoclass:: NoMoreQuestions
     :members:
 
-CantGoBackAnyFurther
-~~~~~~~~~~~~~~~~~~~~
+.. autoclass:: ServerDown
+    :members:
+
+.. autoclass:: TechnicalServerError
+    :members:
+
 .. autoclass:: CantGoBackAnyFurther
     :members:
