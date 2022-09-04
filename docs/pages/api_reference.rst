@@ -21,8 +21,8 @@ Models
     :members:
 
 .. autoclass:: Guess
+    :exclude-members: id, name, probablility, description, ranking, absolute_picture_path
     :members:
-    :exclude-members: id, name, probability, description, ranking, absolute_picture_path
 
 Utils
 -----

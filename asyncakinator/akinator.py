@@ -189,8 +189,10 @@ class Akinator:
 
         Parameters
         ----------
-        language: :class:`str` | :class:`None`
-            The language to use when starting the game.
+        language: :class:`Language` | :class:`None`
+            The language to use when starting the game. If :class:`None`, the language specified in the constructor will be used.
+        theme: :class:`Theme` | :class:`None`
+            The theme to use when starting the game. If :class:`None`, the theme specified in the constructor will be used.
         child_mode: :class:`bool`
             Whether or not to use child mode. If True, the game will be more "child-friendly".
 
@@ -250,13 +252,8 @@ class Akinator:
 
         Parameter
         ---------
-        answer: :class:`str`
-            The answer to the current question. It can be one of the following:
-                - Yes: "y", "yes" "0"
-                - No: "n", "no", "1"
-                - I don't know: "i", "idk", "i dont know", "i don't know", "2"
-                - Probably: "p", "probably", "3"
-                - Probably not: "pn", "probably not", "4"
+        answer: :class:`Answer`
+            The answer to the current question.
 
         Raises
         ------
