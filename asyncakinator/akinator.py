@@ -250,6 +250,10 @@ class Akinator:
         answer: :class:`Answer`
             The answer to the current question.
 
+            .. note::
+
+                Calling this method with :attr:`Answer.back` will call :meth:`Akinator.back` for you.
+
         Raises
         ------
         :exc:`NoMoreQuestions`
@@ -260,6 +264,9 @@ class Akinator:
         :class:`str`
             The next question that Akinator asks.
         """
+
+        if answer == Answer.BACK:
+            return await self.back()
 
         async with self._session.get(
             ANSWER_URL.format(
@@ -287,6 +294,11 @@ class Akinator:
     async def back(self) -> str:
         """
         Go back to the previous question.
+
+        .. note::
+
+            :meth:`Akinator.answer` will call this method for you if you pass in :attr:`Answer.BACK`.
+            It is recommended that you use that for better experience.
 
         Raises
         ------

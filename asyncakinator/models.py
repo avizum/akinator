@@ -48,6 +48,7 @@ class Answer(enum.Enum):
     I_DONT_KNOW = 2
     PROBABLY = 3
     PROBABLY_NOT = 4
+    BACK = 5
 
     def __str__(self) -> str:
         return self.name
@@ -79,6 +80,8 @@ class Answer(enum.Enum):
                 ``probably``, ``p``, and ``3``.
             For :attr:`Answer.PROBABLY_NOT`, the following are valid:
                 ``probably not``, ``pn``, and ``4``.
+            For :attr:`Answer.BACK`, the following are valid:
+                ``back``, ``b``, and ``5``.
 
         Raises
         ------
@@ -101,6 +104,8 @@ class Answer(enum.Enum):
             return cls.PROBABLY
         elif answer in {"probably not", "pn", "4"}:
             return cls.PROBABLY_NOT
+        elif answer in {"back", "b", "5"}:
+            return cls.BACK
         else:
             raise InvalidAnswer(f"Invalid answer: {answer}")
 
