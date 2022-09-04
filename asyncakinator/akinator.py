@@ -194,12 +194,7 @@ class Akinator:
         theme: :class:`Theme` | :class:`None`
             The theme to use when starting the game. If :class:`None`, the theme specified in the constructor will be used.
         child_mode: :class:`bool`
-            Whether or not to use child mode. If True, the game will be more "child-friendly".
-
-        Raises
-        ------
-        :exc:`TypeError`
-            The `session` parameter was not a :class:`aiohttp.ClientSession`.
+            Whether or not to use child mode. If True, the game will be more "child-friendly". If :class:`None`, the child mode specified in the constructor will be used.
 
         Returns
         -------
@@ -257,8 +252,8 @@ class Akinator:
 
         Raises
         ------
-        :exc:`InvalidAnswerError`
-            The answer was not one of the valid answers.
+        :exc:`NoMoreQuestions`
+            There are no more questions to be asked. Call :meth:`Akinator.win` to get the results.
 
         Returns
         -------
