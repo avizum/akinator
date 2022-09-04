@@ -9,6 +9,30 @@ Akinator
 .. autoclass:: Akinator
     :members:
 
+Models
+------
+.. autoclass:: Answer
+    :members:
+
+.. autoclass:: Language
+    :members:
+
+.. autoclass:: Theme
+    :members:
+
+.. autoclass:: Guess
+    :members:
+
+Utils
+-----
+
+MISSING
+~~~~~~~
+.. attribute:: akinator.utils.MISSING
+
+A sentinel value that is used to indicate a missing value with distinction from :class:`None`.
+
+
 Exceptions
 ----------
 
@@ -51,13 +75,3 @@ CantGoBackAnyFurther
 ~~~~~~~~~~~~~~~~~~~~
 .. autoclass:: CantGoBackAnyFurther
     :members:
-
-
-Utils
------
-
-MISSING
-~~~~~~~
-.. attribute:: akinator.utils.MISSING
-
-A sentinel value that is used to indicate a missing value with distinction from :class:`None`.

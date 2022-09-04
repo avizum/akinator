@@ -2,6 +2,7 @@
 MIT License
 
 Copyright (c) 2019 NinjaSnail1080
+Copyright (c) 2022 avizum
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,43 +24,55 @@ SOFTWARE.
 """
 
 
-class InvalidAnswerError(ValueError):
+class InputError(ValueError):
     """Raised when the user inputs an invalid answer"""
 
     pass
 
 
-class InvalidLanguageError(ValueError):
+class InvalidAnswer(InputError):
+    """Raised when the user inputs an invalid answer"""
+
+    pass
+
+
+class InvalidLanguage(InputError):
     """Raised when the user inputs an invalid language"""
 
     pass
 
 
-class AkinatorConnectionFailure(Exception):
+class InvalidTheme(InputError):
+    """Raised when the user inputs an invalid theme"""
+
+    pass
+
+
+class ConnectionFailure(Exception):
     """Raised if the Akinator API fails to connect for some reason."""
 
     pass
 
 
-class AkinatorTimedOut(AkinatorConnectionFailure):
+class TimedOut(ConnectionFailure):
     """Raised if the Akinator session times out"""
 
     pass
 
 
-class AkinatorNoQuestions(AkinatorConnectionFailure):
+class NoMoreQuestions(ConnectionFailure):
     """Raised if the Akinator API runs out of questions to ask. This will happen if "Akinator.step" is at 79"""
 
     pass
 
 
-class AkinatorServerDown(AkinatorConnectionFailure):
+class ServerDown(ConnectionFailure):
     """Raised if Akinator's servers are down for the region you're running on."""
 
     pass
 
 
-class AkinatorTechnicalError(AkinatorConnectionFailure):
+class TechnicalServerError(ConnectionFailure):
     """Raised if Akinator's servers had a technical error."""
 
     pass

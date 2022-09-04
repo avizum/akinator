@@ -33,22 +33,16 @@ from typing import Any
 import aiohttp
 
 from .exceptions import CantGoBackAnyFurther
-from .utils import (
-    MISSING,
-    Guess,
-    answer_to_id,
-    format_guess,
-    get_lang_and_theme,
-    raise_connection_error
-)
+from .utils import MISSING, raise_connection_error
+from .models import Answer, Language, Theme, Guess
 
-# * URLs for the API requests
+
 NEW_SESSION_URL = "https://{}/new_session?callback=jQuery331023608747682107778_{}&urlApiWs={}&partner=1&childMod={}&player=website-desktop&uid_ext_session={}&frontaddr={}&constraint=ETAT<>'AV'&soft_constraint={}&question_filter={}"
 ANSWER_URL = "https://{}/answer_api?callback=jQuery331023608747682107778_{}&urlApiWs={}&childMod={}&session={}&signature={}&step={}&answer={}&frontaddr={}&question_filter={}"
 BACK_URL = "{}/cancel_answer?callback=jQuery331023608747682107778_{}&childMod={}&session={}&signature={}&step={}&answer=-1&question_filter={}"
 WIN_URL = "{}/list?callback=jQuery331023608747682107778_{}&childMod={}&session={}&signature={}&step={}"
 
-# * HTTP headers to use for the requests
+
 HEADERS = {
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
     "Accept-Encoding": "gzip, deflate",
@@ -66,37 +60,15 @@ class Akinator:
 
         Some attributes will be missing before a game has started.
         Use :func:`Akinator.start` a game before accessing these attributes.
+        Some attributes will be missing until a game has ended.
+        Use :func:`Akinator.win` to end a game before accessing these attributes.
 
     Parameters
     ----------
-    language: :class:`str`
-        The language to use when starting the game. "en" if not provided, or you can use the following:
-
-        - ``en``: English (default)
-        - ``en_animals``: English server for guessing animals
-        - ``en_objects``: English server for guessing objects
-        - ``ar``: Arabic
-        - ``cn``: Chinese
-        - ``de``: German
-        - ``de_animals``: German server for guessing animals
-        - ``es``: Spanish
-        - ``es_animals``: Spanish server for guessing animals
-        - ``fr``: French
-        - ``fr_animals``: French server for guessing animals
-        - ``fr_objects``: French server for guessing objects
-        - ``il``: Hebrew
-        - ``it``: Italian
-        - ``it_animals``: Italian server for guessing animals
-        - ``jp``: Japanese
-        - ``jp_animals``: Japanese server for guessing animals
-        - ``kr``: Korean
-        - ``nl``: Dutch
-        - ``pl``: Polish
-        - ``pt``: Portuguese
-        - ``ru``: Russian
-        - ``tr``: Turkish
-        - ``id``: Indonesian
-
+    language: :class:`Language`
+        The language to use when starting the game. If left blank, defaults to :attr:`Language.ENGLISH`.
+    theme: :class:`Theme`
+        The theme to use when starting the game. If left blank, defaults to :attr:`Theme.CHARACTERS`.
     child_mode: :class:`bool`
         Whether to use child mode or not. Defaults to False.
 
@@ -121,14 +93,16 @@ class Akinator:
 
     def __init__(
         self,
-        language: str = "en",
+        language: Language = Language.ENGLISH,
+        theme: Theme = Theme.CHARACTERS,
         child_mode: bool = False,
         session: aiohttp.ClientSession | None = None,
     ) -> None:
         if session is not None and not isinstance(session, aiohttp.ClientSession):
             raise TypeError("session must be a aiohttp.ClientSession")
 
-        self.language: str = language
+        self.language: Language = language
+        self.theme: Theme = theme
         self.child_mode: bool = child_mode
         self._session: aiohttp.ClientSession = MISSING
 
@@ -182,34 +156,31 @@ class Akinator:
 
         self.uid, self.frontaddr = match.groups()[0], match.groups()[1]
 
-    async def _auto_get_region(self, lang: str, theme: str) -> dict[str, str]:
+    async def _auto_get_region(self, language: Language, theme: Theme) -> dict[str, str]:
         """Automatically get the uri and server from akinator.com for the specified language and theme"""
 
         server_regex = re.compile(
             '[{"translated_theme_name":"[\s\S]*","urlWs":"https:\\\/\\\/srv[0-9]+\.akinator\.com:[0-9]+\\\/ws","subject_id":"[0-9]+"}]'
         )
 
-        uri = f"{lang}.akinator.com"
-        bad_list = ["https://srv12.akinator.com:9398/ws"]
-        while True:
-            async with self._session.get(f"https://{uri}") as w:
-                match = server_regex.search(await w.text())
-                if match is None:
-                    return {"url": MISSING, "server": MISSING}
-            parsed = json.loads(match.group().split("'arrUrlThemesToPlay', ")[-1])
-            server = MISSING
-            if theme == "a":
-                server = next((i for i in parsed if i["subject_id"] == "14"), MISSING)["urlWs"]
-            elif theme == "c":
-                server = next((i for i in parsed if i["subject_id"] == "1"), MISSING)["urlWs"]
-            elif theme == "o":
-                server = next((i for i in parsed if i["subject_id"] == "2"), MISSING)["urlWs"]
-            if server not in bad_list:
-                return {"uri": uri, "server": server}
+        uri = f"{language}.akinator.com"
+        default_return = {"uri": uri, "server": MISSING}
+        async with self._session.get(f"https://{uri}") as w:
+            match = server_regex.search(await w.text())
+            if match is None:
+                return default_return
+        parsed = json.loads(match.group().split("'arrUrlThemesToPlay', ")[-1])
+        server = MISSING
+        server = next((i for i in parsed if i["subject_id"] == str(theme.value)), MISSING)["urlWs"]
+
+        if server not in ["https://srv12.akinator.com:9398/ws"]:
+            return {"uri": uri, "server": server}
+        return default_return
 
     async def start(
         self,
-        language: str | None = None,
+        language: Language | None = None,
+        theme: Theme | None = None,
         child_mode: bool | None = None,
     ) -> str:
         """
@@ -238,15 +209,14 @@ class Akinator:
 
         if language is not None:
             self.language = language
+        if theme is not None:
+            self.theme = theme
         if child_mode is not None:
             self.child_mode = child_mode
 
         self.timestamp = time.time()
 
-        region_info = await self._auto_get_region(
-            get_lang_and_theme(self.language)["lang"],
-            get_lang_and_theme(self.language)["theme"]
-        )
+        region_info = await self._auto_get_region(self.language, self.theme)
         self.uri, self.server = region_info["uri"], region_info["server"]
 
         soft_constraint = "ETAT%3D%27EN%27" if self.child_mode else ""
@@ -274,7 +244,7 @@ class Akinator:
         else:
             return raise_connection_error(resp["completion"])
 
-    async def answer(self, answer: str) -> str:
+    async def answer(self, answer: Answer) -> str:
         """
         Answers the current question accessed with :attr:`Akinator.question`, and returns the next question.
 
@@ -298,7 +268,6 @@ class Akinator:
         :class:`str`
             The next question that Akinator asks.
         """
-        ans = answer_to_id(answer)
 
         async with self._session.get(
             ANSWER_URL.format(
@@ -309,7 +278,7 @@ class Akinator:
                 self.session,
                 self.signature,
                 self.step,
-                ans,
+                str(answer.value),
                 self.frontaddr,
                 self.question_filter,
             ),
@@ -378,18 +347,29 @@ class Akinator:
         """
         async with self._session.get(
             WIN_URL.format(
-                self.server, self.timestamp, str(self.child_mode).lower(), self.session, self.signature, self.step
+                self.server,
+                self.timestamp,
+                str(self.child_mode).lower(),
+                self.session,
+                self.signature,
+                self.step,
             ),
             headers=HEADERS,
         ) as w:
             resp = self._parse_response(await w.text())
 
         if resp["completion"] == "OK":
-            self.first_guess = format_guess(resp["parameters"]["elements"][0]["element"])
-            self.guesses = [format_guess(g["element"]) for g in resp["parameters"]["elements"]]
+            self.first_guess = Guess._from_dict(resp["parameters"]["elements"][0]["element"])
+            self.guesses = [Guess._from_dict(x["element"]) for x in resp["parameters"]["elements"]]
             return self.first_guess
         else:
             return raise_connection_error(resp["completion"])
+
+    async def end(self) -> Guess:
+        """
+        Alias to :meth:`Akinator.win`.
+        """
+        return await self.win()
 
     async def close(self) -> None:
         """

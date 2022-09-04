@@ -26,10 +26,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-import pathlib
-import os
-
 from .akinator import Akinator
 from .exceptions import *
+from .models import *
 
-__version__ = "1.1"
+__version__ = "1.2"

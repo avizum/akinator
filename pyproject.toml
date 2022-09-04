@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "asyncakinator"
-version = "1.1"
+version = "1.2"
 description = "An async API wrapper for Akinator, written in Python."
 authors = ["avizum <juliusrt@outlook.com>"]
 license = "MIT"
