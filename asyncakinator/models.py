@@ -39,6 +39,10 @@ __all__ = (
 
 
 class Answer(enum.Enum):
+    """
+    Represents the answer to a question.
+    """
+
     YES = 0
     NO = 1
     I_DONT_KNOW = 2
@@ -104,37 +108,6 @@ class Answer(enum.Enum):
 class Language(enum.Enum):
     """
     Represents the language of the game.
-
-    Attributes
-    ----------
-    ENGLISH:
-        Represents the English language in a game.
-    ARABIC:
-        Represents the Arabic language in a game.
-    CHINESE:
-        Represents the Chinese language in a game.
-    GERMAN:
-        Represents the German language in a game.
-    SPANISH:
-        Represents the Spanish language in a game.
-    FRENCH:
-        Represents the French language in a game.
-    HEBREW:
-        Represents the Hebrew language in a game.
-    ITALIAN:
-        Represents the Italian language in a game.
-    JAPANESE:
-        Represents the Japanese language in a game.
-    KOREAN:
-        Represents the Korean language in a game.
-    PORTUGUESE:
-        Represents the Portuguese language in a game.
-    RUSSIAN:
-        Represents the Russian language in a game.
-    TURKISH:
-        Represents the Turkish language in a game.
-    INDONESIAN:
-        Represents the Indonesian language in a game.
     """
 
     ENGLISH = "en"
@@ -221,15 +194,6 @@ class Language(enum.Enum):
 class Theme(enum.Enum):
     """
     Determines what server to use when starting a game.
-
-    Attributes
-    ----------
-    CHARACTERS:
-        Represents the ``characters`` server.
-    OBJECTS:
-        Represents the ``objects`` server.
-    ANIMALS:
-        Represents the ``animals`` server.
     """
 
     CHARACTERS = 1

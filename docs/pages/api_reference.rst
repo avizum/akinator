@@ -22,6 +22,7 @@ Models
 
 .. autoclass:: Guess
     :members:
+    :exclude-members:
 
 Utils
 -----
