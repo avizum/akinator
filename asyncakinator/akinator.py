@@ -252,7 +252,7 @@ class Akinator:
 
             .. note::
 
-                Calling this method with :attr:`Answer.back` will call :meth:`Akinator.back` for you.
+                Calling this method with :attr:`Answer.BACK` will call :meth:`Akinator.back` for you.
 
         Raises
         ------

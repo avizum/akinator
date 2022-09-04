@@ -75,7 +75,7 @@ class Answer(enum.Enum):
             For :attr:`Answer.NO`, the following are valid:
                 ``no``, ``n``, and ``1``.
             For :attr:`Answer.I_DONT_KNOW`, the following are valid:
-                ``i dont know``, ``i don't know``, ``idk``, ``i_dont_know``, ``i_dont_know``, ``i_dont_know``, and ``2``.
+                ``i dont know``, ``i don't know``, ``idk``, and ``2``.
             For :attr:`Answer.PROBABLY`, the following are valid:
                 ``probably``, ``p``, and ``3``.
             For :attr:`Answer.PROBABLY_NOT`, the following are valid:
