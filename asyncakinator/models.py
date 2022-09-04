@@ -211,7 +211,7 @@ class Theme(enum.Enum):
             The theme to convert to :class:`Theme`.
 
             For :attr:`Theme.CHARACTERS`, the following are valid:
-                ``characters``, ``ch``, and``c``.
+                ``characters``, ``ch``, and ``c``.
             For :attr:`Theme.OBJECTS`, the following are valid:
                 ``objects``, ``obj``, and ``o``.
             For :attr:`Theme.ANIMALS`, the following are valid:
