@@ -67,5 +67,5 @@ Exceptions
 .. autoclass:: NotStarted
     :members:
 
-.. autoclass:: CantGoBackAnyFurther
+.. autoclass:: CanNotGoBack
     :members:

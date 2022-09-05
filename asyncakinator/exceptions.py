@@ -84,7 +84,7 @@ class NotStarted(Exception):
     pass
 
 
-class CantGoBackAnyFurther(Exception):
+class CanNotGoBack(Exception):
     """Raised when the user is on the first question and tries to go back further."""
 
     pass

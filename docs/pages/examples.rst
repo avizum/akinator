@@ -18,7 +18,7 @@ Basic Example
     from asyncakinator import (
         Akinator,
         Answer,
-        CantGoBackAnyFurther,
+        CanNotGoBack,
         InvalidAnswer,
         Language,
         NoMoreQuestions,
@@ -45,7 +45,7 @@ Basic Example
                 continue
             try:
                 question = await game.answer(answer)
-            except CantGoBackAnyFurther:
+            except CanNotGoBack:
                 print("This is the first question, you can't go back.")
                 continue
             except NoMoreQuestions:
@@ -81,7 +81,7 @@ Discord Bot Example
     from asyncakinator import (
         Akinator,
         Answer,
-        CantGoBackAnyFurther,
+        CanNotGoBack,
         InvalidAnswer,
         Language,
         InvalidLanguage,
@@ -130,7 +130,7 @@ Discord Bot Example
                     continue
                 try:
                     question = await game.answer(answer)
-                except CantGoBackAnyFurther:
+                except CanNotGoBack:
                     await ctx.send("This is the first question, you can't go back.")
                     continue
                 except NoMoreQuestions:

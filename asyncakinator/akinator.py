@@ -32,7 +32,7 @@ from typing import Any
 
 import aiohttp
 
-from .exceptions import CantGoBackAnyFurther, NotStarted
+from .exceptions import CanNotGoBack, NotStarted
 from .utils import MISSING, raise_connection_error
 from .models import Answer, Language, Theme, Guess
 
@@ -260,7 +260,7 @@ class Akinator:
         ------
         :exc:`NoMoreQuestions`
             There are no more questions to be asked. Call :meth:`Akinator.win` to get the results.
-        :exc:`CantGoBackAnyFurther`
+        :exc:`CanNotGoBack`
             The Akinator game is on the first question, so it can't go back anymore.
         :exc:`NotStarted`
             Occurs when you try to answer a question before starting the game.
@@ -311,7 +311,7 @@ class Akinator:
 
         Raises
         ------
-        :exc:`CantGoBackAnyFurther`
+        :exc:`CanNotGoBack`
             The Akinator game is on the first question, so it can't go back anymore.
         :exc:`NotStarted`
             Occurs when you try to answer a question before starting the game.
@@ -326,7 +326,7 @@ class Akinator:
             raise NotStarted("Game has not started!")
 
         if self.step == 0:
-            raise CantGoBackAnyFurther("You were on the first question and couldn't go back any further")
+            raise CanNotGoBack("You were on the first question and couldn't go back any further")
 
         async with self._session.get(
             BACK_URL.format(

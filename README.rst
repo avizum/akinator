@@ -51,7 +51,7 @@ Here's a quick little example of the library being used to make a simple, text-b
             if a == "b":
                 try:
                     question = await aki.back()
-                except akinator.CantGoBackAnyFurther:
+                except akinator.CanNotGoBack:
                     continue
             else:
                 try:
