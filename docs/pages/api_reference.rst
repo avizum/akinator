@@ -64,5 +64,8 @@ Exceptions
 .. autoclass:: TechnicalServerError
     :members:
 
+.. autoclass:: NotStarted
+    :members:
+
 .. autoclass:: CantGoBackAnyFurther
     :members:
