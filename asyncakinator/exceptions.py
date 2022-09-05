@@ -78,6 +78,12 @@ class TechnicalServerError(ConnectionFailure):
     pass
 
 
+class NotStarted(Exception):
+    """Raised when the user tries to do something before starting the game."""
+
+    pass
+
+
 class CantGoBackAnyFurther(Exception):
     """Raised when the user is on the first question and tries to go back further."""
 

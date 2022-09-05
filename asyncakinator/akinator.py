@@ -32,7 +32,7 @@ from typing import Any
 
 import aiohttp
 
-from .exceptions import CantGoBackAnyFurther
+from .exceptions import CantGoBackAnyFurther, NotStarted
 from .utils import MISSING, raise_connection_error
 from .models import Answer, Language, Theme, Guess
 
@@ -105,6 +105,7 @@ class Akinator:
         self.theme: Theme = theme
         self.child_mode: bool = child_mode
         self._session: aiohttp.ClientSession = MISSING
+        self._started: bool = False
 
         self.question: str = MISSING
         self.progression: float = 0.0
@@ -236,6 +237,7 @@ class Akinator:
             resp = self._parse_response(await w.text())
 
         if resp["completion"] == "OK":
+            self._started = True
             self._update(resp, True)
             return self.question
         else:
@@ -258,12 +260,19 @@ class Akinator:
         ------
         :exc:`NoMoreQuestions`
             There are no more questions to be asked. Call :meth:`Akinator.win` to get the results.
+        :exc:`CantGoBackAnyFurther`
+            The Akinator game is on the first question, so it can't go back anymore.
+        :exc:`NotStarted`
+            Occurs when you try to answer a question before starting the game.
 
         Returns
         -------
         :class:`str`
             The next question that Akinator asks.
         """
+
+        if self._started is False:
+            raise NotStarted("Game has not started!")
 
         if answer == Answer.BACK:
             return await self.back()
@@ -304,12 +313,18 @@ class Akinator:
         ------
         :exc:`CantGoBackAnyFurther`
             The Akinator game is on the first question, so it can't go back anymore.
+        :exc:`NotStarted`
+            Occurs when you try to answer a question before starting the game.
 
         Returns
         -------
         :class:`str`
             The previous question that Akinator asked.
         """
+
+        if self._started is False:
+            raise NotStarted("Game has not started!")
+
         if self.step == 0:
             raise CantGoBackAnyFurther("You were on the first question and couldn't go back any further")
 
@@ -348,7 +363,21 @@ class Akinator:
 
             It is recommended that you call this function when `Akinator.progression` is above 85.0,
             because by then, Akinator will most likely narrowed the guesses down to one.
+
+        Raises
+        ------
+        :exc:`NotStarted`
+            Occurs when you try to answer a question before starting the game.
+
+        Returns
+        -------
+        :class:`Guess`
+            The first guess that Akinator has. Also set in :attr:`Akinator.first_guess`.
         """
+
+        if self._started is False:
+            raise NotStarted("Game has not started!")
+
         async with self._session.get(
             WIN_URL.format(
                 self.server,
