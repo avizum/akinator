@@ -85,6 +85,21 @@ class Akinator:
     guesses: list[:class:`Guess`]
         A list of :class:`Guess` dictionary of guesses from greatest to least probability.
 
+    uri: :class:`str`
+        The uri that is being used.
+    server: :class:`str`
+        The server that is being used.
+    signature: :class:`int`
+        An :class:`int` that represents a game's signature.
+    uid: :class:`str`
+        Represents a games Unique ID, used for authentication purposes.
+    frontaddr: :class:`str`
+        An IP address in Base64, used for authentication purposes.
+    timestamp: :class:`int`
+        A POSIX timestamp that is set when :meth:`Akinator.start` is called
+    session: :class:`int`
+        Represents a game's session.
+
     Raises
     ------
     :exc:`TypeError`
@@ -123,13 +138,15 @@ class Akinator:
         self.timestamp: float = 0.0
         self.session: int = 0
 
+
     async def _create_session(self) -> None:
         self._session = aiohttp.ClientSession()
+        self._session.headers.update(HEADERS)
 
-    def _update(self, resp: Any, start: bool = False) -> None:
+    def _update(self, resp: Any) -> None:
         """Update class variables"""
 
-        if start:
+        if not self._started:
             self.session = int(resp["parameters"]["identification"]["session"])
             self.signature = int(resp["parameters"]["identification"]["signature"])
             self.question = str(resp["parameters"]["step_information"]["question"])
@@ -238,7 +255,7 @@ class Akinator:
 
         if resp["completion"] == "OK":
             self._started = True
-            self._update(resp, True)
+            self._update(resp)
             return self.question
         else:
             return raise_connection_error(resp["completion"])
@@ -416,3 +433,4 @@ class Akinator:
             await self._session.close()
 
         self._session = MISSING
+        self._started = False
