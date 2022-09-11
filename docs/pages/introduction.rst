@@ -42,10 +42,10 @@ If you want to install the development version of asyncakinator, follow the dire
 
     .. code-block:: console
 
-        py -3 -m pip install -U git+https://github.com/avizum/akinator@main
+        py -3 -m pip install -U git+https://github.com/avizum/asyncakinator@main
 
 .. tab:: MacOS/Linux
 
     .. code-block:: console
 
-        python3 -m pip install -U git+https://github.com/avizum/akinator@main
+        python3 -m pip install -U git+https://github.com/avizum/asyncakinator@main

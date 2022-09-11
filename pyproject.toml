@@ -24,9 +24,9 @@ classifiers=[
     "Topic :: Utilities"
 ]
 
-repository="https://github.com/avizum/akinator"
-homepage="https://github.com/avizum/akinator"
-documentation="https://github.com/avizum/akinator/blob/master/README.rst"
+repository="https://github.com/avizum/asyncakinator"
+homepage="https://github.com/avizum/asyncakinator"
+documentation="https://asyncakinator.readthedocs.io/en/latest/"
 
 [tool.poetry.dependencies]
 python = ">=3.9"
