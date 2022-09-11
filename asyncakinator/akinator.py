@@ -103,7 +103,7 @@ class Akinator:
     Raises
     ------
     :exc:`TypeError`
-        The session is not an class`aiohttp.ClientSession`.
+        The session is not an :class:`aiohttp.ClientSession`.
     """
 
     def __init__(

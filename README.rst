@@ -10,23 +10,32 @@ An async API wrapper for the online game, Akinator, written in Python.
 
 `Akinator <https://en.akinator.com/>`_ is a web-based game which tries to determine what character you are thinking of by asking a series of questions.
 
+
 Installing
 ----------
 
-To install, just run the following command::
+To install, just run the following command:
 
-  python3 -m pip install -U asyncakinator
+.. code-block:: shell
+
+    # MacOS/Linux
+    python3 -m pip install -U asyncakinator
+
+    # Windows
+    py -3 -m pip install -U asyncakinator
+
 
 Requirements
 ~~~~~~~~~~~~
 - Python ≥3.9
 
-- ``requests``
-
 - ``aiohttp``
 
 
-Usually, ``pip`` will handle these for you.
+Documentation
+-------------
+Documention can be found `here. <https://asyncakinator.readthedocs.io/en/latest/>`_
+
 
 Quick Examples
 --------------
@@ -35,44 +44,55 @@ Here's a quick little example of the library being used to make a simple, text-b
 
 .. code-block:: python
 
-    import akinator
     import asyncio
 
-    aki = akinator.Akinator(
-        language=akinator.Language.ENGLISH,
-        theme=akinator.Theme.ANIMALS,
+    from asyncakinator import (
+        Akinator,
+        Answer,
+        CanNotGoBack,
+        InvalidAnswer,
+        Language,
+        NoMoreQuestions,
+        Theme
     )
 
-    async def main():
-        question = await aki.start()
 
-        while aki.progression <= 80:
-            a = input(f"{question}\n\t")
-            if a == "b":
-                try:
-                    question = await aki.back()
-                except akinator.CanNotGoBack:
-                    continue
-            else:
-                try:
-                    question = await aki.answer(akinator.Answer.from_str(a))
-                except akinator.InvalidAnswer:
-                    print("Invalid answer. Please try again.\n")
-                    continue
-        await aki.win()
+    game = Akinator(
+        language=Language.ENGLISH,
+        theme=Theme.ANIMALS,
+    )
+
+
+    async def main():
+        question = await game.start()
+
+        while game.progression <= 80:
+            print(question)
+            user_input = input("Answer:  ")
+            try:
+                answer = Answer.from_str(user_input)
+            except InvalidAnswer:
+                print("Invalid answer")
+                continue
+            try:
+                question = await game.answer(answer)
+            except CanNotGoBack:
+                print("This is the first question, you can't go back.")
+                continue
+            except NoMoreQuestions:
+                break
+
+        await game.win()
 
         correct = input(
-            f"You are thinking of {aki.first_guess.name} ({aki.first_guess.description}). "
-            f"Am I correct?\n{aki.first_guess.absolute_picture_path}\n\t"
+            f"You are thinking of {game.first_guess.name} ({game.first_guess.description}). "
+            f"Am I correct?\n{game.first_guess.absolute_picture_path}\n---\nAnswer:  "
         )
-        if akinator.Answer.from_str(correct) == akinator.Answer.YES:
+        if Answer.from_str(correct) == Answer.YES:
             print("Nice.")
         else:
             print("Maybe next time.")
-        await aki.close()
+        await game.close()
+
 
     asyncio.run(main())
-
-Documentation
--------------
-Documention can be found `here. <https://asyncakinator.readthedocs.io/en/latest/>`_
