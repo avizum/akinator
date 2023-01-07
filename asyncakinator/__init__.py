@@ -5,7 +5,7 @@ An API wrapper for the online game, Akinator, written in Python
 MIT License
 
 Copyright (c) 2019 NinjaSnail1080
-Copyright (c) 2022 avizum
+Copyright (c) 2022 - 2023 avizum
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
