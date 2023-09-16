@@ -31,9 +31,9 @@ classifiers = [
 ]
 
 [project.urls]
-homepage = "https://github.com/avizum/asyncakinator"
-documentation = "https://asyncakinator.readthedocs.io/"
-repository = "https://github.com/avizum/asyncakinato"
+"Home Page" = "https://github.com/avizum/asyncakinator"
+"Documentation" = "https://asyncakinator.readthedocs.io/"
+"Repository" = "https://github.com/avizum/asyncakinato"
 
 [project.optional-dependencies]
 docs = [
@@ -58,3 +58,9 @@ force_alphabetical_sort_within_sections = true
 
 [tool.pyright]
 typeCheckingMode = "basic"
+
+[tool.ruff]
+ignore = ["F401", "F402", "F403", "F405"]
+line-length = 125
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+target-version = "py311"

@@ -27,14 +27,9 @@ from __future__ import annotations
 
 from typing import Any, NoReturn
 
+from .exceptions import ConnectionFailure, NoMoreQuestions, ServerDown, TechnicalServerError, TimedOut
 
-from .exceptions import (
-    ConnectionFailure,
-    TimedOut,
-    NoMoreQuestions,
-    ServerDown,
-    TechnicalServerError,
-)
+__all__ = ()
 
 
 class _MissingSentinel:

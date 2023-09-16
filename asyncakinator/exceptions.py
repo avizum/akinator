@@ -23,6 +23,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
+__all__ = (
+    "InputError",
+    "InvalidAnswer",
+    "InvalidLanguage",
+    "InvalidTheme",
+    "ConnectionFailure",
+    "TimedOut",
+    "NoMoreQuestions",
+    "ServerDown",
+    "TechnicalServerError",
+    "NotStarted",
+    "CanNotGoBack",
+)
+
 
 class InputError(ValueError):
     """Raised when the user inputs an invalid answer"""
