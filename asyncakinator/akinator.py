@@ -33,8 +33,10 @@ from typing import Any
 import aiohttp
 
 from .exceptions import CanNotGoBack, NotStarted
+from .models import Answer, Guess, Language, Theme
 from .utils import MISSING, raise_connection_error
-from .models import Answer, Language, Theme, Guess
+
+__all__ = ("Akinator",)
 
 
 NEW_SESSION_URL = "https://{}/new_session?callback=jQuery331023608747682107778_{}&urlApiWs={}&partner=1&childMod={}&player=website-desktop&uid_ext_session={}&frontaddr={}&constraint=ETAT<>'AV'&soft_constraint={}&question_filter={}"
@@ -138,14 +140,12 @@ class Akinator:
         self.timestamp: float = 0.0
         self.session: int = 0
 
-
     async def _create_session(self) -> None:
-        self._session = aiohttp.ClientSession()
+        self._session = aiohttp.ClientSession(connector=aiohttp.TCPConnector(verify_ssl=False))
         self._session.headers.update(HEADERS)
 
     def _update(self, resp: Any) -> None:
         """Update class variables"""
-
         if not self._started:
             self.session = int(resp["parameters"]["identification"]["session"])
             self.signature = int(resp["parameters"]["identification"]["signature"])
@@ -178,12 +178,12 @@ class Akinator:
         """Automatically get the uri and server from akinator.com for the specified language and theme"""
 
         server_regex = re.compile(
-            '[{"translated_theme_name":"[\s\S]*","urlWs":"https:\\\/\\\/srv[0-9]+\.akinator\.com:[0-9]+\\\/ws","subject_id":"[0-9]+"}]'
+            r'[{"translated_theme_name":"[\s\S]*","urlWs":"https:\\\/\\\/srv[0-9]+\.akinator\.com:[0-9]+\\\/ws","subject_id":"[0-9]+"}]'
         )
 
         uri = f"{language}.akinator.com"
         default_return = {"uri": uri, "server": MISSING}
-        async with self._session.get(f"https://{uri}") as w:
+        async with self._session.get(f"https://{uri}", ssl=False) as w:
             match = server_regex.search(await w.text())
             if match is None:
                 return default_return
@@ -254,8 +254,8 @@ class Akinator:
             resp = self._parse_response(await w.text())
 
         if resp["completion"] == "OK":
-            self._started = True
             self._update(resp)
+            self._started = True
             return self.question
         else:
             return raise_connection_error(resp["completion"])
